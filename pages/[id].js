@@ -1,11 +1,26 @@
+import { useEffect, useState } from "react";
 import { supabase } from "../utils/supabase";
+import Video from 'react-player';
 
 const LessonDetails = ({lesson}) => {
-  console.log({lesson});
+  const [video, setVideo] = useState();
+
+  const getPremiumContent = async () => {
+    const { data } = await supabase.from('premium_content').select('video_url').eq('id', lesson.id).single();
+
+    setVideo(data?.video_url);
+  };
+
+  useEffect(() => {
+    getPremiumContent();
+  },[]);
+  // console.log({lesson});
   return(
     <div className="w-full max-w-3; mx-auto py-16 px-8">
       <h1 className="text-3xl mb-6">{lesson.title}</h1>
       <p>{lesson.description}</p>
+      {!! video && <Video url={video} width='100%' />}
+
     </div>
   );
 };
