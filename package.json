@@ -7,7 +7,10 @@
     "api": "json-server --watch data/db.json --port 3004"
   },
   "dependencies": {
+    "@stripe/stripe-js": "^1.22.0",
     "@supabase/supabase-js": "^1.29.1",
+    "axios": "^0.24.0",
+    "cookie": "^0.4.1",
     "json-server": "^0.17.0",
     "next": "latest",
     "ngrok": "^4.2.2",

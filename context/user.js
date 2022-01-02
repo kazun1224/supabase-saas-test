@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "../utils/supabase";
 import { useRouter } from "next/router";
+import axios from "axios";
 
 const Context = createContext();
 
@@ -34,6 +35,14 @@ const Provider = ({ children }) => {
       getUserProfile();
     });
   }, []);
+
+  // cookieの情報をセットして状態を渡せるようにする
+  useEffect(() => {
+    axios.post('/api/set-supabase-cookie', {
+      event: user ? 'SIGNED_IN': 'SIGNED_OUT',
+      session: supabase.auth.session(),
+    })
+  },[user]);
 
   const login = async () => {
     await supabase.auth.signIn({
