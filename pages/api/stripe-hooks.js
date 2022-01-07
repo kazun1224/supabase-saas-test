@@ -31,6 +31,7 @@ const handler = async (req, res) => {
 
   console.log({event});
 
+  
   res.send({ received: true });
 };
 
