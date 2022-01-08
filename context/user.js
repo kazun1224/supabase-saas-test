@@ -38,11 +38,26 @@ const Provider = ({ children }) => {
 
   // cookieの情報をセットして状態を渡せるようにする
   useEffect(() => {
-    axios.post('/api/set-supabase-cookie', {
-      event: user ? 'SIGNED_IN': 'SIGNED_OUT',
+    axios.post("/api/set-supabase-cookie", {
+      event: user ? "SIGNED_IN" : "SIGNED_OUT",
       session: supabase.auth.session(),
-    })
-  },[user]);
+    });
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      const subscription = supabase
+        .from(`profile=eq.${user.id}`)
+        .on("UPDATE", (payload) => {
+          setUser({ ...user, ...payload.new });
+        })
+        .subscribe();
+
+      return () => {
+        supabase.removeSubscription(subscription);
+      };
+    }
+  }, [user]);
 
   const login = async () => {
     await supabase.auth.signIn({
