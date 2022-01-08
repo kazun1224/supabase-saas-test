@@ -2,21 +2,20 @@ import initStripe from "stripe";
 import { useUser } from "../context/user";
 import axios from "axios";
 import { loadStripe } from "@stripe/stripe-js";
+import Link from "next/link";
 
 const Pricing = ({ plans }) => {
   // return <pre>{JSON.stringify(plans, null, 10)}</pre>;
   const { user, login, isLoading } = useUser();
 
   //チェックアウト画面に遷移
-  const processSubscription = (planId) =>  async () => {
+  const processSubscription = (planId) => async () => {
     //axiosのエンドポイント
     const { data } = await axios.get(`/api/subscription/${planId}`);
     //@stripe/stripe-jsをインストールしloadStripeで初期設定
     const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY);
-    await stripe.redirectToCheckout({sessionId: data.id});
+    await stripe.redirectToCheckout({ sessionId: data.id });
   };
-
-
 
   const showSubscribeButton = !!user && !user.is_subscribed;
   const showCreateAccountButton = !user;
@@ -31,13 +30,19 @@ const Pricing = ({ plans }) => {
             <p className="text-gray-500">{`${plan.price}円 / ${plan.interval}`}</p>
             {!isLoading && (
               <div>
-                 {/* showSubscribeButtonを押したらStripeのチェックアウトに行く */}
-                {showSubscribeButton && <button onClick={processSubscription(plan.id)}>Subscribe</button>}
+                {/* showSubscribeButtonを押したらStripeのチェックアウトに行く */}
+                {showSubscribeButton && (
+                  <button onClick={processSubscription(plan.id)}>
+                    Subscribe
+                  </button>
+                )}
                 {showCreateAccountButton && (
                   <button onClick={login}>Create Account</button>
                 )}
                 {showManagementSubscriptionButton && (
-                  <button>Go Management screen</button>
+                  <Link href="/dashboard">
+                    <a>Go Management screen</a>
+                  </Link>
                 )}
               </div>
             )}
