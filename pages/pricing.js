@@ -23,8 +23,7 @@ const Pricing = ({ plans }) => {
 
   return (
     <div className="w-full max-w-3xl mx-auto py-16 flex justify-around">
-      {plans.map((plan) => {
-        return (
+      {plans.map((plan) => (
           <div key={plan.id} className="w-80 h-40 rounded px-6 py-6 shadow">
             <h2 className="text-3xl">{plan.name}</h2>
             <p className="text-gray-500">{`${plan.price}円 / ${plan.interval}`}</p>
@@ -47,8 +46,8 @@ const Pricing = ({ plans }) => {
               </div>
             )}
           </div>
-        );
-      })}
+        )
+      )}
     </div>
   );
 };
